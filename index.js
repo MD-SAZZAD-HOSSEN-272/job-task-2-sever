@@ -35,7 +35,12 @@ async function run() {
     });
 
     app.get('/jobs', async(req, res) => {
-        const result = await jobsCollection.find().toArray();
+      const searchText = req.query.search
+      let query = {};
+      if(searchText){
+        query = {title: {$regex: searchText, $options: 'i'}}
+      }
+        const result = await jobsCollection.find(query).toArray();
         res.send(result)
     })
 
